@@ -1,0 +1,13 @@
+{
+  "name": "envality",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Felix",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsc -w"
+  },
+  "devDependencies": {
+    "typescript": "^3.9.7"
+  }
+}
