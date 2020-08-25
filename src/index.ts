@@ -1,49 +1,49 @@
-const KEY_OPTIONS = Symbol('key-options');
+const CONFIG = Symbol('key-config');
 
-const KEY_BASEENV = Symbol('key-base-env');
+interface Config<OPTION> {
+  env?: string;
+  baseEnv?: string;
+  base: OPTION;
+  option?: OPTION;
+  options: { [env: string]: OPTION };
+}
 
-const KEY_BASE = Symbol('key-base');
-
-const KEY_ENV = Symbol('key-env');
+export const toEnvString = (exp: string | RegExp): string => {
+  return exp.toString().replace(/^(\/?)(.*)(\1)[igm]*$/, '$2');
+};
 
 export default class Envality<O extends object = object> {
-  private [KEY_OPTIONS]: { [env: string]: O } = {};
-  private [KEY_BASEENV]: string;
-  private [KEY_BASE]: O = {} as O;
-  private [KEY_ENV]: string;
+  private [CONFIG]: Config<O> = {
+    base: {} as O,
+    options: {},
+  };
 
   constructor(options: { [env: string]: O }, baseEnv?: string) {
-    this[KEY_BASEENV] = baseEnv;
+    this[CONFIG].baseEnv = baseEnv;
     if (options) {
-      const base = this[KEY_BASE];
-      Object.keys(options)
-        .map((env) => options[env])
-        .forEach((option) => {
-          Object.setPrototypeOf(option, base);
-        });
+      Object.keys(options).forEach((env) => {
+        this.set(env, options[env]);
+      });
     }
     if (typeof window !== 'undefined') {
       this.env = window.location.host;
     }
   }
 
-  public exists(env: string): boolean {
-    return !!this[KEY_OPTIONS][env];
-  }
-
   public set(env: string, option: O): void {
     const o: O = { ...option };
-    if (this[KEY_BASEENV] === env) {
-      Object.setPrototypeOf(this[KEY_BASE], o);
+    if (new RegExp(env).test(this[CONFIG].baseEnv)) {
+      Object.setPrototypeOf(this.base, o);
     } else {
-      Object.setPrototypeOf(o, this[KEY_BASE]);
+      Object.setPrototypeOf(o, this.base);
     }
-    this[KEY_OPTIONS][env] = o;
+    this[CONFIG].option = null;
+    this[CONFIG].options[env] = o;
   }
 
   public put(env: string, option: O) {
     if (option) {
-      const o = this[KEY_OPTIONS][env];
+      const o = this.get(env);
       if (o) {
         Object.assign(o, option);
       } else {
@@ -52,27 +52,36 @@ export default class Envality<O extends object = object> {
     }
   }
 
-  public get(env: string): O {
-    return this[KEY_OPTIONS][env] || this.base;
+  public get(env?: string): O {
+    const targetEnv = env || this.env;
+    const options = this[CONFIG].options;
+    const matchEnv = this.envs.find((env) => {
+      return new RegExp(env).test(targetEnv);
+    });
+    return options[matchEnv] || this.base;
   }
 
   public get envs(): string[] {
-    return Object.keys(this[KEY_OPTIONS]);
+    return Object.keys(this[CONFIG].options);
   }
 
   public get base(): O {
-    return this[KEY_BASE];
+    return this[CONFIG].base;
   }
 
   public set env(env: string) {
-    this[KEY_ENV] = env;
+    this[CONFIG].env = env;
+    this[CONFIG].option = null;
   }
 
   public get env(): string {
-    return this[KEY_ENV];
+    return this[CONFIG].env;
   }
 
   public get option(): O {
-    return this[KEY_OPTIONS][this.env] || this[KEY_BASE];
+    if (this[CONFIG].option) {
+      return this[CONFIG].option;
+    }
+    return (this[CONFIG].option = this.get());
   }
 }
