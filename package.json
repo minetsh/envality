@@ -1,11 +1,12 @@
 {
   "name": "envality",
   "version": "0.0.1",
-  "main": "index.js",
+  "main": "dist/index.js",
   "author": "Felix",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "build": "tsc"
   },
   "devDependencies": {
     "typescript": "^3.9.7"
