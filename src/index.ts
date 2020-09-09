@@ -26,7 +26,11 @@ export default class Envality<O extends object = object> {
       });
     }
     if (typeof window !== 'undefined') {
-      this.env = window.location.host;
+      let env = window.location.host;
+      if (typeof sessionStorage !== 'undefined') {
+        env = sessionStorage.getItem('envality-env') || env;
+      }
+      this.env = env;
     }
   }
 
@@ -76,6 +80,12 @@ export default class Envality<O extends object = object> {
   public set env(env: string) {
     this._config.env = env;
     this._config.option = null;
+    if (
+      typeof window !== 'undefined' &&
+      typeof sessionStorage !== 'undefined'
+    ) {
+      sessionStorage.setItem('envality-env', env);
+    }
   }
 
   public get env(): string {
