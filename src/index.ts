@@ -35,11 +35,11 @@ export default class Envality<O extends object = object> {
   }
 
   public set(env: string, option: O): void {
-    const o: O = { ...option };
-    if (new RegExp(env).test(this._config.baseEnv)) {
-      setPrototypeOf(this.base, o);
+    let o: O = { ...option };
+    if (env === this._config.baseEnv) {
+      this._config.base = setPrototypeOf(this.base, o);
     } else {
-      setPrototypeOf(o, this.base);
+      o = setPrototypeOf(o, this.base);
     }
     this._config.option = null;
     this._config.options[env] = o;
