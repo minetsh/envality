@@ -4,9 +4,14 @@
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
+    "suppressImplicitAnyIndexErrors": true,
     "outDir": "./dist",
-    "sourceMap": true,
-    "target": "ES6"
+    "sourceMap": false,
+    "target": "ES5",
+    "typeRoots": [
+      "node_modules/@types",
+      "global.d.ts"
+    ],
   },
   "include": [
     "src/**/*"

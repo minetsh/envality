@@ -1,14 +1,18 @@
 {
   "name": "envality",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/index.js",
-  "author": "Felix",
+  "author": "Felix,minxtth@gmail.com",
   "license": "MIT",
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc"
   },
   "devDependencies": {
+    "@types/core-js": "^2.5.4",
     "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "core-js": "^3.6.5"
   }
 }

@@ -1,4 +1,7 @@
-export default interface Envality<O extends object = object> {
+export function toEnvString(env: string | RegExp): string;
+
+export default class Envality<O extends object = object> {
+  constructor(options: { [env: string]: O }, baseEnv?: string);
   readonly envs: string[];
   readonly base: O;
   readonly option: O;
