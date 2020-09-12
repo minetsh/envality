@@ -1,5 +1,5 @@
 /**
- * 仅适用于Chrome和FireFox，在IE中不工作
+ * 非 IE 环境
  */
 export const setPrototypeOf = (obj: any, proto: object): any => {
   if (obj.__proto__) {
@@ -20,23 +20,21 @@ export const setPrototypeOf = (obj: any, proto: object): any => {
 };
 
 export function assign(target: any, ...sources: any[]): any {
+  if (Object.assign) {
+    return Object.assign.apply(this, arguments);
+  }
+
   if (target === null || target === undefined) {
     throw new TypeError('Cannot convert undefined or null to object');
   }
 
-  const to = Object(target);
-
-  for (let index = 1; index < arguments.length; index++) {
-    const nextSource = arguments[index];
-
-    if (nextSource !== null && nextSource !== undefined) {
-      for (const nextKey in nextSource) {
-        // Avoid bugs when hasOwnProperty is shadowed
-        if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-          to[nextKey] = nextSource[nextKey];
-        }
+  for (let source: any, i = 1, n = arguments.length; i < n; i++) {
+    source = arguments[i];
+    for (const key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
       }
     }
   }
-  return to;
+  return target;
 }

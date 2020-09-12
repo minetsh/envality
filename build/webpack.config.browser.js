@@ -1,4 +1,5 @@
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
@@ -17,8 +18,10 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
-    filename: 'index.js',
-    path: path.resolve(__dirname, 'lib'),
+    library: 'envality',
+    libraryTarget: 'window',
+    filename: 'envality.min.js',
+    path: path.resolve(__dirname, '../output'),
   },
-  plugins: [new BundleAnalyzerPlugin()],
+  plugins: [new UglifyJsPlugin()],
 };

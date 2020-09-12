@@ -1,9 +1,9 @@
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
-  watch: true,
-  mode: 'development',
+  mode: 'production',
   entry: './src/index.ts',
   module: {
     rules: [
@@ -18,7 +18,10 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
+    library: 'envality',
+    libraryTarget: 'commonjs2',
     filename: 'index.js',
-    path: path.resolve(__dirname, 'lib'),
+    path: path.resolve(__dirname, '../lib'),
   },
+  plugins: [new UglifyJsPlugin()],
 };

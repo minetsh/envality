@@ -5,12 +5,16 @@
   "author": "Felix,minxtth@gmail.com",
   "license": "MIT",
   "scripts": {
-    "dev": "webpack --config webpack.config.dev.js",
-    "build": "webpack --config webpack.config.build.js"
+    "dev": "webpack --config build/webpack.config.dev.js",
+    "build": "webpack --config build/webpack.config.build.js",
+    "build-browser": "webpack --config build/webpack.config.browser.js",
+    "test": "jest"
   },
   "devDependencies": {
+    "jest": "^26.4.2",
     "ts-loader": "^8.0.3",
     "typescript": "^3.9.7",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.44.1",
     "webpack-bundle-analyzer": "^3.8.0",
     "webpack-cli": "^3.3.12"

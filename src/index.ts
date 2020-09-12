@@ -1,4 +1,4 @@
-import { setPrototypeOf, assign } from './utils';
+import { setPrototypeOf, assign } from './ployfill';
 
 interface Config<OPTION> {
   env?: string;
@@ -12,7 +12,7 @@ export const toEnvString = (env: string | RegExp): string => {
   return env.toString().replace(/^(\/?)(.*)(\1)[igm]*$/, '$2');
 };
 
-export default class Envality<O extends object = object> {
+export class Envality<O extends object = object> {
   private _config: Config<O> = {
     base: {} as O,
     options: {},
@@ -35,7 +35,7 @@ export default class Envality<O extends object = object> {
   }
 
   public set(env: string, option: O): void {
-    let o: O = { ...option };
+    let o: O = assign({}, option);
     if (env === this._config.baseEnv) {
       this._config.base = setPrototypeOf(this.base, o);
     } else {
@@ -99,3 +99,5 @@ export default class Envality<O extends object = object> {
     return (this._config.option = this.get());
   }
 }
+
+export default Envality;
